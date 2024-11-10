@@ -1,0 +1,12 @@
+# GUI Base using Dear ImGui and SDL2
+
+
+
+### Compiling and Running Program
+
+From the `root directory` of project and run the following commands. The first command builds the project, and the second runs the project.
+
+```bash
+colcon build
+./ImGuiSDL2
+```

@@ -37,3 +37,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(ImGuiSDL2 PRIVATE
     ${SDL2_LIBRARIES} 
 )
+
+install(TARGETS ImGuiSDL2 DESTINATION ${CMAKE_SOURCE_DIR})
