@@ -3,6 +3,8 @@
 #include "backends/imgui_impl_sdlrenderer2.h"
 #include <SDL2/SDL.h>
 
+#include "custom_elements.hpp"
+
 int main(int argc, char* argv[]) {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0) {
@@ -10,7 +12,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Create SDL window
-    SDL_Window* window = SDL_CreateWindow("ImGui SDL2 Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("Base ImGui SDL2 Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     // Initialize ImGui
@@ -32,9 +34,21 @@ int main(int argc, char* argv[]) {
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
 
-        // Render GUI
-        ImGui::Begin("Hello, ImGui!");
-        ImGui::Text("This is a sample window.");
+        // // Render GUI
+        // ImGui::Begin("Hello, ImGui!");
+        // ImGui::Text("This is a sample window.");
+        // ImGui::End();
+
+        // ImGui::Begin("Text input test");
+        // int bufsize = 48;
+        // char buf1[bufsize] = {};
+        // ImGui::InputText("##text1", buf1, bufsize);
+        // ImGui::Text(buf1);
+        // ImGui::End();
+
+        ImGui::Begin("Toggle switch?");
+        bool toggle = false;
+        ToggleButton("toggle_switch", &toggle);
         ImGui::End();
 
         // Rendering
