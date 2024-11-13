@@ -21,6 +21,11 @@ int main(int argc, char* argv[]) {
     ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
     ImGui_ImplSDLRenderer2_Init(renderer);
 
+    bool teststate = false;
+    float testval = 0.5f;
+
+    ToggleButton toggle("testing", "test label", &teststate);
+
     bool running = true;
     SDL_Event event;
     while (running) {
@@ -46,9 +51,17 @@ int main(int argc, char* argv[]) {
         // ImGui::Text(buf1);
         // ImGui::End();
 
+        ImGui::SetNextItemWidth(200.0f);
         ImGui::Begin("Toggle switch?");
-        bool toggle = false;
-        ToggleButton("toggle_switch", &toggle);
+        // toggle.Render();
+        toggle.Render_switch();
+
+        if (teststate) {
+            ImGui::SetNextItemWidth(100.0f);
+            ImGui::SliderFloat("Testing:", &testval, 0.0f, 1.0f);
+            ImGui::SameLine();
+            ImGui::Text(" %.3f units", testval);
+        }
         ImGui::End();
 
         // Rendering
