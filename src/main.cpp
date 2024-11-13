@@ -24,7 +24,14 @@ int main(int argc, char* argv[]) {
     bool teststate = false;
     float testval = 0.5f;
 
+    int inittoggle = 1;
+    std::vector<char*> initoptions = {"autonomous", "disabled", "teleop"};
+    std::vector<ImU32> cols = {IM_COL32(0.5f, 0.5f, 0.8f, 1.0f), IM_COL32(0.8f, 0.5f, 0.5f, 1.0f), IM_COL32(0.5f, 0.8f, 0.5f, 1.0f)};
+
     ToggleButton toggle("testing", "test label", &teststate);
+    MultiToggle mtoggle(&inittoggle, initoptions, "multitest", "multi test label");
+    MultiToggle mctoggle(&inittoggle, initoptions, "multitest-color", "multi test color label");
+    mctoggle.SetColors(cols);
 
     bool running = true;
     SDL_Event event;
@@ -52,7 +59,7 @@ int main(int argc, char* argv[]) {
         // ImGui::End();
 
         ImGui::SetNextItemWidth(200.0f);
-        ImGui::Begin("Toggle switch?");
+        ImGui::Begin("Toggle switch Examples");
         // toggle.Render();
         toggle.Render_switch();
 
@@ -62,6 +69,10 @@ int main(int argc, char* argv[]) {
             ImGui::SameLine();
             ImGui::Text(" %.3f units", testval);
         }
+
+        mtoggle.Render();
+        mctoggle.Render();
+
         ImGui::End();
 
         // Rendering
