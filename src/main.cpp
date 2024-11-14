@@ -25,12 +25,13 @@ int main(int argc, char* argv[]) {
     float testval = 0.5f;
 
     int inittoggle = 1;
-    std::vector<char*> initoptions = {"autonomous", "disabled", "teleop"};
-    std::vector<ImU32> cols = {IM_COL32(0.5f, 0.5f, 0.8f, 1.0f), IM_COL32(0.8f, 0.5f, 0.5f, 1.0f), IM_COL32(0.5f, 0.8f, 0.5f, 1.0f)};
+    int mcinittoggle = 1;
+    std::vector<std::string> initoptions = {"autonomous", "disabled", "teleop"};
+    std::vector<BASE_COLORS> cols = {BASE_COLORS::BLUE, BASE_COLORS::RED, BASE_COLORS::GREEN};
 
     ToggleButton toggle("testing", "test label", &teststate);
     MultiToggle mtoggle(&inittoggle, initoptions, "multitest", "multi test label");
-    MultiToggle mctoggle(&inittoggle, initoptions, "multitest-color", "multi test color label");
+    MultiToggle mctoggle(&mcinittoggle, initoptions, "multitest-color", "multi test color label");
     mctoggle.SetColors(cols);
 
     bool running = true;

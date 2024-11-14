@@ -3,12 +3,43 @@
 
 #include <vector>
 #include <iostream>
+#include <string>
 
 #include "imgui.h"
 #include "imgui_internal.h"
 
+enum class BASE_COLORS {
+    RED,
+    ORANGE,
+    YELLOW,
+    GREEN,
+    BLUE,
+    PURPLE,
+    BLACK,
+    WHITE,
+};
+
+std::vector<ImU32> COLORS = {
+    IM_COL32(255,  50,  50, 255),
+    IM_COL32(255, 160,   0, 255),
+    IM_COL32(255, 225,   0, 255),
+    IM_COL32( 50, 255,  50, 255),
+    IM_COL32( 50,  50, 255, 255),
+    IM_COL32(160,   0, 255, 255),
+    IM_COL32(  0,   0,   0, 255),
+    IM_COL32(255, 255, 255, 255)
+};
+
 float ANIMATION_SPEED = 0.08F;
 
+/*
+ * The ToggleButton class creates a Toggle Switch element with 2 options.
+ * The options could be used as ON/OFF for example.
+ * 
+ * At this moment, there are only 2 color options: white or green. It would
+ * not be difficult to add in the ability to use the enum class BASE_COLORS
+ * or custom color options.
+*/
 class ToggleButton {
     public:
         ToggleButton(const char* str_id, const char* label, bool* v) : id(str_id), label(label), toggle(v) {}
@@ -55,9 +86,19 @@ class ToggleButton {
         const char* label;
 };
 
+/*
+ * The MultiToggle class creates a Toggle Switch element with more than
+ * 2 options: ON/OFF for example. Instead, this MultiToggle can be used
+ * as: Autonomous, Disabled, Teleop for controlling a robot for example.
+ * 
+ * By default there are only 3 color options shown in a scale from White
+ * to solid green. To use alternate colors, call SetColors() with multitoggle
+ * class object using a vector of enum class BASE_COLORS. There currently
+ * is not a implementation of custom colors.
+ */
 class MultiToggle {
     public:
-        MultiToggle(int* current_pos,std::vector<char*> options, const char* id, const char* label) 
+        MultiToggle(int* current_pos,std::vector<std::string> options, const char* id, const char* label) 
             : current_pos(current_pos), options(options), id(id), label(label) {}
 
         void Render() {
@@ -84,26 +125,27 @@ class MultiToggle {
 
             float t = *current_pos / static_cast<float>(options.size() - 1);
 
-            ImU32 col_bg = ImGui::IsItemHovered()
+            ImU32 col_bg;
+
+            if (!colors.empty() && colors.size() == options.size()) {
+                col_bg = COLORS.at(static_cast<int>(colors.at(*current_pos)));
+            } else {
+                col_bg = ImGui::IsItemHovered()
                 ? ImGui::GetColorU32(ImLerp(ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.3f, 0.8f, 0.3f, 1.0f), t))
                 : ImGui::GetColorU32(ImLerp(ImVec4(0.9f, 0.9f, 0.9f, 1.0f), ImVec4(0.6f, 0.7f, 0.3f, 1.0f), t));
-
-            if (colors.size() > 0 && colors.size() == options.size()) {
-                col_bg = colors.at(*current_pos);
             }
 
             draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), col_bg, height * 0.5f);
             draw_list->AddCircleFilled(ImVec2(p.x + radius + t * (width - radius * 2.0f), p.y + radius), radius - 1.5f, IM_COL32(255, 255, 255, 255));
             ImGui::SameLine();
-
-            ImGui::Text("%s: %s", label, options.at(*current_pos));
+            ImGui::Text("%s: %s", label, options.at(*current_pos).c_str());
         }
 
-        void SetColors(std::vector<ImU32> cols) { colors = cols; }
+        void SetColors(std::vector<BASE_COLORS> cols) { colors = cols; }
 
     private:
-        std::vector<char*> options;
-        std::vector<ImU32> colors;
+        std::vector<std::string> options;
+        std::vector<BASE_COLORS> colors;
         int* current_pos;
         const char* id;
         const char* label;
