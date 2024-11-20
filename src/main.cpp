@@ -34,6 +34,13 @@ int main(int argc, char* argv[]) {
     MultiToggle mctoggle(&mcinittoggle, initoptions, "multitest-color", "multi test color label");
     mctoggle.SetColors(cols);
 
+    TextOutput to("test1");
+    TextOutput to1("test2", BASE_COLORS::GREEN);
+
+    int buffersize = 50;
+    char buf1[buffersize] = {};
+    TextInput ti("input1", buf1, &buffersize);
+
     bool running = true;
     SDL_Event event;
     while (running) {
@@ -62,7 +69,7 @@ int main(int argc, char* argv[]) {
         ImGui::SetNextItemWidth(200.0f);
         ImGui::Begin("Toggle switch Examples");
         // toggle.Render();
-        toggle.Render_switch();
+        toggle.Render();
 
         if (teststate) {
             ImGui::SetNextItemWidth(100.0f);
@@ -73,6 +80,11 @@ int main(int argc, char* argv[]) {
 
         mtoggle.Render();
         mctoggle.Render();
+
+        to.Render();
+        to1.Render();
+
+        ti.Render();
 
         ImGui::End();
 

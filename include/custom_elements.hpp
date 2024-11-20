@@ -17,8 +17,13 @@ enum class BASE_COLORS {
     PURPLE,
     BLACK,
     WHITE,
+    NONE
 };
 
+/*
+ * In cases where ImU32 can be used for colors,
+ * this vector of colors will be used.
+*/
 std::vector<ImU32> COLORS = {
     IM_COL32(255,  50,  50, 255),
     IM_COL32(255, 160,   0, 255),
@@ -30,7 +35,88 @@ std::vector<ImU32> COLORS = {
     IM_COL32(255, 255, 255, 255)
 };
 
+/*
+ * In cases where ImU32 cannot be used for colors,
+ * this vector of ImVec4 colors will be used.
+*/
+std::vector<ImVec4> VEC_COLORS = {
+    ImVec4(1.00f, 0.20f, 0.20f, 1.00f),
+    ImVec4(1.00f, 0.63f, 0.00f, 1.00f),
+    ImVec4(1.00f, 1.00f, 0.00f, 1.00f),
+    ImVec4(0.20f, 1.00f, 0.20f, 1.00f),
+    ImVec4(0.20f, 0.20f, 1.00f, 1.00f),
+    ImVec4(0.63f, 0.00f, 1.00f, 1.00f),
+    ImVec4(0.00f, 0.00f, 0.00f, 1.00f),
+    ImVec4(1.00f, 1.00f, 1.00f, 1.00f)
+};
+
 float ANIMATION_SPEED = 0.08F;
+
+/*
+ * Basic custom element class object. All actual instances are
+ * separate classes extending this class. This class should not
+ * be used as an element to be output in window.
+ * 
+ * Proper use of this class would be creating a vector of different
+ * custom elements to be in 1 window. 
+*/
+class CustomElement {
+    public:
+        CustomElement() {}
+
+        virtual void Render() const = 0;
+
+    private:
+        const char* id;
+        const char* label;
+};
+
+/*
+ * Instantiated Custom Element class object for outputting text in
+ * window. Note: This is not actually custom, some elements may be
+ * unique, but most syntax and format is standard ImGui practice and
+ * functions.
+*/
+class TextOutput : CustomElement {
+    public:
+        TextOutput(std::string text) : output(text), col(BASE_COLORS::NONE) {}
+        TextOutput(std::string text, BASE_COLORS col) : output(text), col(col) {}
+
+        void Render() const override {
+            if (col == BASE_COLORS::NONE) {
+                ImGui::Text("%s", output.c_str());
+            } else {
+                ImGui::TextColored(VEC_COLORS.at(static_cast<int>(col)), "%s", output.c_str());
+            }
+        }
+
+        void SetColor(BASE_COLORS color) { col = color; }
+
+    private:
+        std::string output;
+        BASE_COLORS col;
+};
+
+/*
+ * Instantiated Custom Element class object for inputting text in
+ * window. Note: This is not actually custom, some elements may be
+ * unique, but most syntax and format is standard ImGui practice and
+ * functions.
+*/
+class TextInput : CustomElement {
+    public:
+        TextInput(const char* id, char* buffer, int* buffersize)
+            : id(id), buffer(buffer), buffersize(buffersize) {}
+
+        void Render() const override {
+            ImGui::InputText(id, buffer, *buffersize);
+        }
+        
+    private:
+        const char* id;
+        char* buffer;
+        int* buffersize;
+};
 
 /*
  * The ToggleButton class creates a Toggle Switch element with 2 options.
@@ -40,12 +126,12 @@ float ANIMATION_SPEED = 0.08F;
  * not be difficult to add in the ability to use the enum class BASE_COLORS
  * or custom color options.
 */
-class ToggleButton {
+class ToggleButton : CustomElement{
     public:
         ToggleButton(const char* str_id, const char* label, bool* v) : id(str_id), label(label), toggle(v) {}
 
         // Renders a toggle switch
-        void Render_switch() {
+        void Render() const override {
             ImVec2 p = ImGui::GetCursorScreenPos();
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
@@ -96,12 +182,12 @@ class ToggleButton {
  * class object using a vector of enum class BASE_COLORS. There currently
  * is not a implementation of custom colors.
  */
-class MultiToggle {
+class MultiToggle : CustomElement {
     public:
         MultiToggle(int* current_pos,std::vector<std::string> options, const char* id, const char* label) 
             : current_pos(current_pos), options(options), id(id), label(label) {}
 
-        void Render() {
+        void Render() const override {
             ImVec2 p = ImGui::GetCursorScreenPos();
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
