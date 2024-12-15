@@ -23,6 +23,9 @@ add_executable(ImGuiSDL2
     include/imgui/imgui_widgets.cpp
     include/imgui/backends/imgui_impl_sdlrenderer2.cpp
     include/imgui/backends/imgui_impl_sdl2.cpp
+    include/implot/implot.cpp
+    include/implot/implot_items.cpp
+    # src/implot_demo.cpp
     src/main.cpp
 )
 
@@ -31,6 +34,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/include/imgui
     ${CMAKE_SOURCE_DIR}/include/imgui/backends
+    ${CMAKE_SOURCE_DIR}/include/implot
 )
 
 # link sdl2 library

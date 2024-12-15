@@ -1,5 +1,10 @@
 # GUI Base using Dear ImGui and SDL2
 
+This is a compilation of ImGui and extension packages for some personal use. The intended use is to expand and include all files within this repo for many different projects.
+
+Extension Packages:
+- ImPlot: A 2D Graph/Plot library, https://github.com/epezent/implot/tree/master
+
 
 
 ### Compiling and Running Program

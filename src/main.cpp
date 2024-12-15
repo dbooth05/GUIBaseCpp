@@ -1,9 +1,49 @@
+// ImGui and SDL imports
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_sdlrenderer2.h"
 #include <SDL2/SDL.h>
 
+// Custom Elements/Widgets inclusions
 #include "custom_elements.hpp"
+
+// ImGui Extension inclusions
+#include "implot.h"
+
+// Stadard C++ inclusions
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+struct ScrollingBuffer {
+    int max, offset;
+    ImVector<ImVec2> data;
+
+    ScrollingBuffer(int max_size = 2000) {
+        max = max_size;
+        offset = 0;
+        data.reserve(max);
+    }
+
+    void add_point(float x, float y) {
+        if (data.size() < max) {
+            data.push_back(ImVec2(x, y));
+        } else {
+            data[offset] = ImVec2(x, y);
+            offset = (offset + 1) % max;
+        }
+    }
+
+    void erase() {
+        if (data.size() > 0) {
+            data.shrink(0);
+            offset = 0;
+        }
+    }
+};
+
+
 
 int main(int argc, char* argv[]) {
     // Initialize SDL
