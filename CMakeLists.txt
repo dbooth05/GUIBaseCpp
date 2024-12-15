@@ -25,7 +25,6 @@ add_executable(ImGuiSDL2
     include/imgui/backends/imgui_impl_sdl2.cpp
     include/implot/implot.cpp
     include/implot/implot_items.cpp
-    # src/implot_demo.cpp
     src/main.cpp
 )
 
