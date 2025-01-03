@@ -21,25 +21,10 @@ enum class BASE_COLORS {
 };
 
 /*
- * In cases where ImU32 can be used for colors,
- * this vector of colors will be used.
-*/
-std::vector<ImU32> COLORS = {
-    IM_COL32(255,  50,  50, 255),
-    IM_COL32(255, 160,   0, 255),
-    IM_COL32(255, 225,   0, 255),
-    IM_COL32( 50, 255,  50, 255),
-    IM_COL32( 50,  50, 255, 255),
-    IM_COL32(160,   0, 255, 255),
-    IM_COL32(  0,   0,   0, 255),
-    IM_COL32(255, 255, 255, 255)
-};
-
-/*
  * In cases where ImU32 cannot be used for colors,
  * this vector of ImVec4 colors will be used.
 */
-std::vector<ImVec4> VEC_COLORS = {
+std::vector<ImVec4> COLORS = {
     ImVec4(1.00f, 0.20f, 0.20f, 1.00f),
     ImVec4(1.00f, 0.63f, 0.00f, 1.00f),
     ImVec4(1.00f, 1.00f, 0.00f, 1.00f),
@@ -86,7 +71,7 @@ class TextOutput : CustomElement {
             if (col == BASE_COLORS::NONE) {
                 ImGui::Text("%s", output.c_str());
             } else {
-                ImGui::TextColored(VEC_COLORS.at(static_cast<int>(col)), "%s", output.c_str());
+                ImGui::TextColored(COLORS.at(static_cast<int>(col)), "%s", output.c_str());
             }
         }
 
@@ -128,7 +113,7 @@ class TextInput : CustomElement {
 */
 class ToggleButton : CustomElement{
     public:
-        ToggleButton(const char* str_id, const char* label, bool* v) : id(str_id), label(label), toggle(v) {}
+        ToggleButton(const char* str_id, const char* label, bool* v) : toggle(v), id(str_id), label(label) {}
 
         // Renders a toggle switch
         void Render() const override {
@@ -184,8 +169,10 @@ class ToggleButton : CustomElement{
  */
 class MultiToggle : CustomElement {
     public:
+        MultiToggle() {}
+        
         MultiToggle(int* current_pos,std::vector<std::string> options, const char* id, const char* label) 
-            : current_pos(current_pos), options(options), id(id), label(label) {}
+            : options(options), current_pos(current_pos), id(id), label(label) {}
 
         void Render() const override {
             ImVec2 p = ImGui::GetCursorScreenPos();
@@ -198,7 +185,6 @@ class MultiToggle : CustomElement {
 
             ImGui::InvisibleButton(id, ImVec2(width, height));
             bool is_active = ImGui::IsItemActive();
-            bool is_hovered = ImGui::IsItemHovered();
 
             if (is_active) {
                 float mouse_x = ImGui::GetIO().MousePos.x;
@@ -214,7 +200,7 @@ class MultiToggle : CustomElement {
             ImU32 col_bg;
 
             if (!colors.empty() && colors.size() == options.size()) {
-                col_bg = COLORS.at(static_cast<int>(colors.at(*current_pos)));
+                col_bg = ImGui::GetColorU32(COLORS.at(static_cast<int>(colors.at(*current_pos))));
             } else {
                 col_bg = ImGui::IsItemHovered()
                 ? ImGui::GetColorU32(ImLerp(ImVec4(0.8f, 0.8f, 0.8f, 1.0f), ImVec4(0.3f, 0.8f, 0.3f, 1.0f), t))
