@@ -113,7 +113,7 @@ class TextInput : CustomElement {
 */
 class ToggleButton : CustomElement{
     public:
-        ToggleButton(const char* str_id, const char* label, bool* v) : id(str_id), label(label), toggle(v) {}
+        ToggleButton(const char* str_id, const char* label, bool* v) : toggle(v), id(str_id), label(label) {}
 
         // Renders a toggle switch
         void Render() const override {
@@ -172,7 +172,7 @@ class MultiToggle : CustomElement {
         MultiToggle() {}
 
         MultiToggle(int* current_pos,std::vector<std::string> options, const char* id, const char* label) 
-            : current_pos(current_pos), options(options), id(id), label(label) {}
+            : options(options), current_pos(current_pos), id(id), label(label) {}
 
         void Render() const override {
             ImVec2 p = ImGui::GetCursorScreenPos();
@@ -185,7 +185,6 @@ class MultiToggle : CustomElement {
 
             ImGui::InvisibleButton(id, ImVec2(width, height));
             bool is_active = ImGui::IsItemActive();
-            bool is_hovered = ImGui::IsItemHovered();
 
             if (is_active) {
                 float mouse_x = ImGui::GetIO().MousePos.x;
