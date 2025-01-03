@@ -170,7 +170,7 @@ class ToggleButton : CustomElement{
 class MultiToggle : CustomElement {
     public:
         MultiToggle() {}
-        
+
         MultiToggle(int* current_pos,std::vector<std::string> options, const char* id, const char* label) 
             : options(options), current_pos(current_pos), id(id), label(label) {}
 
